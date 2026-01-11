@@ -64,23 +64,39 @@
                     <canvas id="batChart"></canvas>
                 </div>
             </div>
+            
             <div class="chart-card">
-                <h3>Log de Status</h3>
-                <div id="status-log" style="padding:10px; font-size:12px; color:#aaa; overflow-y:auto; height:100%;">
-                    Aguardando dados...
+                <h3>Estatísticas da Sessão</h3>
+                <div id="stats-container" style="padding:15px; color:#cbd5e1; font-size: 0.9rem; display:flex; flex-direction:column; justify-content:center; height:100%;">
+                    <div style="margin-bottom:8px; display:flex; justify-content:space-between; border-bottom:1px solid #334155; padding-bottom:4px;">
+                        <span>Distância:</span>
+                        <strong style="color:#fff;"><span id="statDist">0.00</span> km</strong>
+                    </div>
+                    <div style="margin-bottom:8px; display:flex; justify-content:space-between; border-bottom:1px solid #334155; padding-bottom:4px;">
+                        <span>Energia:</span>
+                        <strong style="color:#fff;"><span id="statEnergy">0.00</span> kWh</strong>
+                    </div>
+                    <div style="margin-bottom:8px; display:flex; justify-content:space-between; border-bottom:1px solid #334155; padding-bottom:4px;">
+                        <span>Média Vel:</span>
+                        <strong style="color:#fff;"><span id="statAvgSpeed">0.0</span> km/h</strong>
+                    </div>
+                    <div style="margin-bottom:0px; display:flex; justify-content:space-between;">
+                        <span>Tempo:</span>
+                        <strong style="color:#fff;"><span id="statTime">0</span> s</strong>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section class="status-bar">
-            <div class="status-item">TS Active <span id="ts_active" class="led red"></span></div>
-            <div class="status-item">R2D <span id="ready_to_drive" class="led red"></span></div>
-            <div class="status-item">Precharge <span id="precharge_done" class="led red"></span></div>
-            <div class="status-item">TSMS <span id="tsms" class="led red"></span></div>
-            <div class="status-item">Brake <span id="brake_pressed" class="led red"></span></div>
-            <div class="status-item">BSPD <span id="bspd_active" class="led red"></span></div>
-            <div class="status-item">Shutdown <span id="shutdown_active" class="led red"></span></div>
-            <div class="status-item">IMD Fault <span id="imd_fault" class="led red"></span></div>
+            <div class="status-item">TS Active <span id="ts_active" class="led"></span></div>
+            <div class="status-item">R2D <span id="ready_to_drive" class="led"></span></div>
+            <div class="status-item">Precharge <span id="precharge_done" class="led"></span></div>
+            <div class="status-item">TSMS <span id="tsms" class="led"></span></div>
+            <div class="status-item">Brake <span id="brake_pressed" class="led"></span></div>
+            <div class="status-item">BSPD <span id="bspd_active" class="led"></span></div>
+            <div class="status-item">Shutdown <span id="shutdown_active" class="led"></span></div>
+            <div class="status-item">IMD Fault <span id="imd_fault" class="led"></span></div>
         </section>
 
     </div>

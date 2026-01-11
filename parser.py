@@ -75,6 +75,16 @@ def parse_simulated_packet(raw: dict) -> dict:
             "lora_rssi": raw.get("lora_rssi", None),
             "source": raw.get("source", "sim"),
         },
+
+        # --- AQUI ESTÁ A NOVIDADE ---
+        # Estatísticas da Sessão
+        "statistics": {
+            "total_distance_km": float(raw.get("total_distance", 0.0)),
+            "total_energy_kwh": float(raw.get("total_energy", 0.0)),
+            "avg_speed_kmh": float(raw.get("avg_speed", 0.0)),
+            "avg_power_kw": float(raw.get("avg_power", 0.0)),
+            "session_time_s": float(raw.get("session_time", 0.0)),
+        }
     }
 
     return telemetry
