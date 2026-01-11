@@ -85,4 +85,4 @@ def start():
         add_telemetry(telemetry)
         save_telemetry(telemetry)
 
-        time.sleep(0.2)  # 5 Hz
+        time.sleep(2.0)  # 5 Hz

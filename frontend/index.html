@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telemetria FSAE EV</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard">
+        
+        <section class="kpis">
+            <div class="kpi">
+                <span class="label">Velocidade</span>
+                <span class="value" id="kpiSpeed">0 <small>km/h</small></span>
+            </div>
+            <div class="kpi">
+                <span class="label">Volante</span>
+                <span class="value" id="kpiSteer">0<small>°</small></span>
+            </div>
+            <div class="kpi">
+                <span class="label">Tensão HV</span>
+                <span class="value" id="kpiVolt">0 <small>V</small></span>
+            </div>
+            <div class="kpi">
+                <span class="label">Corrente</span>
+                <span class="value" id="kpiCurr">0 <small>A</small></span>
+            </div>
+            <div class="kpi">
+                <span class="label">Temp. Bat</span>
+                <span class="value" id="kpiBatTemp">0 <small>°C</small></span>
+            </div>
+        </section>
+
+        <section class="charts">
+            <div class="chart-card">
+                <h3>Pedais (APPS/BPPS)</h3>
+                <div class="canvas-container">
+                    <canvas id="appsChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Velocidade</h3>
+                <div class="canvas-container">
+                    <canvas id="speedChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Suspensão (Potenciômetros)</h3>
+                <div class="canvas-container">
+                    <canvas id="suspChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Acelerômetro (G-Force)</h3>
+                <div class="canvas-container">
+                    <canvas id="imuChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Temperatura Bateria</h3>
+                <div class="canvas-container">
+                    <canvas id="batChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Log de Status</h3>
+                <div id="status-log" style="padding:10px; font-size:12px; color:#aaa; overflow-y:auto; height:100%;">
+                    Aguardando dados...
+                </div>
+            </div>
+        </section>
+
+        <section class="status-bar">
+            <div class="status-item">TS Active <span id="ts_active" class="led red"></span></div>
+            <div class="status-item">R2D <span id="ready_to_drive" class="led red"></span></div>
+            <div class="status-item">Precharge <span id="precharge_done" class="led red"></span></div>
+            <div class="status-item">TSMS <span id="tsms" class="led red"></span></div>
+            <div class="status-item">Brake <span id="brake_pressed" class="led red"></span></div>
+            <div class="status-item">BSPD <span id="bspd_active" class="led red"></span></div>
+            <div class="status-item">Shutdown <span id="shutdown_active" class="led red"></span></div>
+            <div class="status-item">IMD Fault <span id="imd_fault" class="led red"></span></div>
+        </section>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
