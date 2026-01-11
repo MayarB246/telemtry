@@ -1,31 +1,80 @@
 # parser.py
-from models import Telemetry
-from datetime import datetime, timezone
+from datetime import datetime
 
-def parse_simulated_packet(raw: dict) -> Telemetry:
+def parse_simulated_packet(raw: dict) -> dict:
     """
-    Recebe um dicionário bruto e converte para Telemetry
+    Recebe dados crus (simulados ou reais)
+    e devolve a telemetria padronizada do sistema
     """
-    return Telemetry(
-        timestamp=datetime.now(timezone.utc),
 
-        apps1=raw["apps1"],
-        apps2=raw["apps2"],
+    telemetry = {
+        "timestamp": datetime.utcnow().isoformat() + "Z",
 
-        bpps1=raw["bpps1"],
-        bpps2=raw["bpps2"],
+        # Pedais
+        "apps": {
+            "apps1": float(raw.get("apps1", 0.0)),
+            "apps2": float(raw.get("apps2", 0.0)),
+        },
+        "bpps": {
+            "bpps1": float(raw.get("bpps1", 0.0)),
+            "bpps2": float(raw.get("bpps2", 0.0)),
+        },
 
-        steering_angle=raw["steering_angle"],
+        # Direção e velocidade
+        "steering_angle_deg": float(raw.get("steering_angle", 0.0)),
+        "speed_kmh": float(raw.get("speed", 0.0)),
 
-        susp_fl=raw["susp_fl"],
-        susp_fr=raw["susp_fr"],
-        susp_rl=raw["susp_rl"],
-        susp_rr=raw["susp_rr"],
+        # Suspensão
+        "suspension": {
+            "fl": float(raw.get("susp_fl", 0.0)),
+            "fr": float(raw.get("susp_fr", 0.0)),
+            "rl": float(raw.get("susp_rl", 0.0)),
+            "rr": float(raw.get("susp_rr", 0.0)),
+        },
 
-        accel_x=raw["accel_x"],
-        accel_y=raw["accel_y"],
-        gyro_z=raw["gyro_z"],
+        # IMU
+        "imu": {
+            "accel_x": float(raw.get("accel_x", 0.0)),
+            "accel_y": float(raw.get("accel_y", 0.0)),
+            "gyro_z": float(raw.get("gyro_z", 0.0)),
+        },
 
-        speed=raw["speed"],
-        battery_temp=raw["battery_temp"],
-    )
+        # Bateria / BMS
+        "battery": {
+            "temperature_c": float(raw.get("battery_temp", 0.0)),
+            "voltage_v": float(raw.get("battery_voltage", 0.0)),
+            "current_a": float(raw.get("battery_current", 0.0)),
+            "bms_fault": bool(raw.get("bms_fault", False)),
+        },
+
+        # Tractive System
+        "tractive_system": {
+            "ts_active": bool(raw.get("ts_active", False)),
+            "ready_to_drive": bool(raw.get("ready_to_drive", False)),
+            "precharge_done": bool(raw.get("precharge_done", False)),
+            "tsms": bool(raw.get("tsms", False)),
+            "msd": bool(raw.get("msd", False)),
+        },
+
+        # Freios
+        "brakes": {
+            "brake_pressed": bool(raw.get("brake_pressed", False)),
+            "bspd_active": bool(raw.get("bspd_active", False)),
+            "bots": bool(raw.get("bots", False)),
+        },
+
+        # Segurança
+        "safety": {
+            "shutdown_active": bool(raw.get("shutdown_active", False)),
+            "imd_fault": bool(raw.get("imd_fault", False)),
+        },
+
+        # Sistema
+        "system": {
+            "packet_counter": int(raw.get("packet_counter", 0)),
+            "lora_rssi": raw.get("lora_rssi", None),
+            "source": raw.get("source", "sim"),
+        },
+    }
+
+    return telemetry

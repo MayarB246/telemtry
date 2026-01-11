@@ -1,15 +1,35 @@
-# main.py
 from fastapi import FastAPI
 from threading import Thread
 from serial_reader import start
-from storage import get_all
+from database import init_db, SessionLocal, Telemetry
+from contextlib import asynccontextmanager
 
-app = FastAPI()
-
-@app.on_event("startup")
-def startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
     Thread(target=start, daemon=True).start()
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/telemetry")
-def telemetry():
-    return get_all()
+def telemetry(limit: int = 100):
+    db = SessionLocal()
+
+    rows = (
+        db.query(Telemetry)
+        .order_by(Telemetry.id.asc())
+        .limit(limit)
+        .all()
+    )
+
+    db.close()
+
+    return [
+        {
+            "id": row.id,
+            "timestamp": row.timestamp,
+            "data": row.data
+        }
+        for row in rows
+    ]

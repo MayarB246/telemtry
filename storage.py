@@ -1,11 +1,27 @@
 # storage.py
-MAX_SAMPLES = 5000
-telemetry_buffer = []
+from datetime import datetime
+from database import SessionLocal, Telemetry
 
-def add_telemetry(data):
-    telemetry_buffer.append(data)
-    if len(telemetry_buffer) > MAX_SAMPLES:
-        telemetry_buffer.pop(0)
 
-def get_all():
-    return telemetry_buffer
+def add_telemetry(data: dict):
+    """
+    Salva um pacote de telemetria no banco de dados
+    """
+
+    db = SessionLocal()
+
+    try:
+        row = Telemetry(
+            timestamp=datetime.utcnow(),
+            data=data
+        )
+
+        db.add(row)
+        db.commit()
+
+    except Exception as e:
+        print("Erro ao salvar telemetria:", e)
+        db.rollback()
+
+    finally:
+        db.close()
