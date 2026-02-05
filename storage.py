@@ -1,4 +1,3 @@
-# storage.py
 from datetime import datetime
 from database import SessionLocal, Telemetry
 

@@ -1,21 +1,17 @@
-/* ================= CONFIGURAÇÕES ================= */
 const CONFIG = {
     apiUrl: "http://127.0.0.1:8000/telemetry",
-    interval: 2000,      // 200ms para ficar bem fluido
+    interval: 2000,     
     maxPoints: 50,     // Quantos pontos manter no histórico do gráfico
     simulation: false  // DESLIGADO: Agora vai ler do seu servidor
 };
 
-// Variáveis globais dos gráficos
 let charts = {};
 
-/* ================= INICIALIZAÇÃO ================= */
 document.addEventListener("DOMContentLoaded", () => {
     initCharts();
     setInterval(updateTelemetry, CONFIG.interval);
 });
 
-/* ================= CRIAÇÃO DOS GRÁFICOS ================= */
 function initCharts() {
     const commonOptions = {
         responsive: true,
@@ -52,7 +48,6 @@ function initCharts() {
         });
     };
 
-    // Configurando as linhas dos gráficos
     charts.apps = create('appsChart', [
         { label: 'APPS 1 (%)', data: [], borderColor: '#22c55e' },
         { label: 'APPS 2 (%)', data: [], borderColor: '#16a34a' },
@@ -81,7 +76,6 @@ function initCharts() {
     ], 20, 70);
 }
 
-/* ================= LÓGICA DE DADOS ================= */
 function pushData(chart, values) {
     const dataArray = Array.isArray(values) ? values : [values];
 
@@ -103,9 +97,6 @@ function updateLED(id, isActive) {
     const el = document.getElementById(id);
     if (!el) return;
     
-    // Lógica alinhada com seu CSS:
-    // Se isActive = true -> Adiciona .active (Fica VERMELHO no CSS)
-    // Se isActive = false -> Remove .active (Volta para o padrão VERDE no CSS)
     if (isActive) {
         el.classList.add('active');
     } else {
@@ -113,7 +104,6 @@ function updateLED(id, isActive) {
     }
 }
 
-/* ================= FETCH & LOOP (CONEXÃO JSON) ================= */
 async function updateTelemetry() {
     try {
         const res = await fetch(CONFIG.apiUrl);
@@ -121,18 +111,10 @@ async function updateTelemetry() {
 
         const jsonList = await res.json();
         
-        // Se a lista estiver vazia, para tudo
         if (!jsonList || jsonList.length === 0) return;
 
-        // 1. PEGA O PRIMEIRO ITEM (O mais recente, segundo sua confirmação)
         const latestPacket = jsonList[0];
 
-        // LOG DE DEBUG (Abra o F12 -> Console para ver isso)
-        // console.log("Pacote recebido:", latestPacket);
-
-        // 2. CORREÇÃO DA ESTRUTURA (O PULO DO GATO)
-        // Verifica: "Existe uma chave chamada .data aqui dentro?"
-        // Se sim, entra nela. Se não, usa o pacote inteiro.
         let d;
         if (latestPacket.data) {
             d = latestPacket.data;
@@ -140,27 +122,18 @@ async function updateTelemetry() {
             d = latestPacket;
         }
 
-        // ===========================================================
-        // A PARTIR DAQUI TUDO SEGUE NORMAL
-        // ===========================================================
-
-        // Verifica se os dados essenciais existem antes de tentar ler
-        // Isso evita que a tela fique zerada por erro de leitura
+        
         if (!d.battery || !d.speed_kmh === undefined) {
             console.warn("Estrutura de dados inesperada:", d);
             return;
         }
 
-        // 1. ATUALIZA TEXTOS (KPIs)
-        // Adicionei verificação ?. para não quebrar se for nulo
         if(document.getElementById('kpiSpeed')) document.getElementById('kpiSpeed').innerHTML = `${(d.speed_kmh || 0).toFixed(1)} <small>km/h</small>`;
         if(document.getElementById('kpiSteer')) document.getElementById('kpiSteer').innerHTML = `${(d.steering_angle_deg || 0).toFixed(1)}<small>°</small>`;
         if(document.getElementById('kpiVolt')) document.getElementById('kpiVolt').innerHTML = `${(d.battery?.voltage_v || 0).toFixed(1)} <small>V</small>`;
         if(document.getElementById('kpiCurr')) document.getElementById('kpiCurr').innerHTML = `${(d.battery?.current_a || 0).toFixed(1)} <small>A</small>`;
         if(document.getElementById('kpiBatTemp')) document.getElementById('kpiBatTemp').innerHTML = `${(d.battery?.temperature_c || 0).toFixed(1)} <small>°C</small>`;
 
-        // 2. ATUALIZA ESTATÍSTICAS
-        // Se o parser estiver enviando "statistics", atualiza
         if (d.statistics) {
             const stats = d.statistics;
             const elDist = document.getElementById('statDist');
@@ -176,8 +149,6 @@ async function updateTelemetry() {
             if(elTime) elTime.innerText = (stats.session_time_s || 0).toFixed(0);
         }
 
-        // 3. ATUALIZA GRÁFICOS
-        // Verifica se os objetos existem para não travar
         if(charts.apps && d.apps && d.bpps) {
             pushData(charts.apps, [
                 (d.apps.apps1 || 0) * 100,
@@ -207,7 +178,6 @@ async function updateTelemetry() {
 
         if(charts.bat && d.battery) pushData(charts.bat, d.battery.temperature_c || 0);
 
-        // 4. ATUALIZA STATUS (LEDS)
         if(d.tractive_system) {
             updateLED('ts_active', d.tractive_system.ts_active);
             updateLED('ready_to_drive', d.tractive_system.ready_to_drive);
