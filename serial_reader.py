@@ -7,7 +7,6 @@ from db_writer import save_telemetry
 packet_counter = 0
 start_time = time.time()
 last_loop_time = time.time()
-
 total_distance_km = 0.0
 total_energy_kWh = 0.0
 acc_speed = 0.0

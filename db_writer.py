@@ -1,4 +1,3 @@
-# db_writer.py
 from database import SessionLocal, Telemetry
 
 def save_telemetry(telemetry_data: dict):

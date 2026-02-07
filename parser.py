@@ -66,8 +66,6 @@ def parse_simulated_packet(raw: dict) -> dict:
             "source": raw.get("source", "sim"),
         },
 
-        # --- AQUI ESTÁ A NOVIDADE ---
-        # Estatísticas da Sessão
         "statistics": {
             "total_distance_km": float(raw.get("total_distance", 0.0)),
             "total_energy_kwh": float(raw.get("total_energy", 0.0)),
